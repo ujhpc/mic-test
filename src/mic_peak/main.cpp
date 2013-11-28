@@ -18,14 +18,16 @@ int main(int argc, char* argv[]) {
 
   try {
     cmdline::parser cl;
-    cl.add<int>(
-        "iter", 'i', "millions of iterations", false, 10);
+    cl.add<int>("threads", 't', "number of threads", false);
+    cl.add<int>("iter", 'i', "millions of iterations", false, 10);
     cl.parse_check(argc, argv);
 
     std::cout << "Initializing" << std::endl;
 
+    if (cl.exist("threads")) {
+      omp_set_num_threads(cl.get<int>("threads"));
+    }
 #if 0
-    omp_set_num_threads(2);
     kmp_set_defaults("KMP_AFFINITY=compact");
 #endif
 
@@ -57,8 +59,8 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    double gflops = (double)(1e-9 * max_threads * LOOP_COUNT * iters *
-                             FLOPSPERCALC);
+    double gflops =
+        (double)(1e-9 * max_threads * LOOP_COUNT * iters * FLOPSPERCALC);
     // elasped time
     double sec = timer();
     std::cout << "Gflops = " << gflops << std::endl;

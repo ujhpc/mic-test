@@ -1,2 +1,6 @@
 /*.user
 /build*
+/mic_*
+/**/*.o
+Makefile
+Makefile.*
