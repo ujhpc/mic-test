@@ -18,12 +18,16 @@ int main(int argc, char* argv[]) {
 
   try {
     cmdline::parser cl;
+    cl.add<int>(
+        "iter", 'i', "millions of iterations", false, 10);
     cl.parse_check(argc, argv);
 
     std::cout << "Initializing" << std::endl;
 
+#if 0
     omp_set_num_threads(2);
-    // kmp_set_defaults("KMP_AFFINITY=compact");
+    kmp_set_defaults("KMP_AFFINITY=compact");
+#endif
 
 #pragma omp parallel for
     for (auto i = 0; i < FLOPS_ARRAY_SIZE; i++) {
@@ -32,7 +36,7 @@ int main(int argc, char* argv[]) {
     }
 
     int max_threads = omp_get_max_threads();
-    std::cout << "Starting compute on" << max_threads << "threads"
+    std::cout << "Starting compute on " << max_threads << " threads"
               << std::endl;
 
     Timer timer;

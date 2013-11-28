@@ -13,3 +13,5 @@ macx:!macx-clang {
 }
 
 SUBDIRS += $$files(src/*.pro)
+
+OTHER_FILES += $$files(scripts/*)
