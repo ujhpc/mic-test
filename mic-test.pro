@@ -15,3 +15,4 @@ macx:!macx-clang {
 SUBDIRS += $$files(src/*.pro)
 
 OTHER_FILES += $$files(scripts/*)
+OTHER_FILES += README.md
