@@ -1,0 +1,37 @@
+#!/bin/sh
+
+collect=0
+max_thread=227
+afinity=explicit,granularity=fine,proclist=[1-$max_thread,0]
+
+while true; do
+  case "$1" in
+    -c|--collect) collect=1 ;;
+    -*) echo "unknown option $1" ;;
+    *) break ;;
+  esac
+done
+
+if [ $# -lt 2 ]; then
+  echo "$0 [-c|--collect] <host> <command>"
+  return 0
+fi
+
+host="$1"
+cmd="$2"
+
+shift 2
+
+if [ $collect -eq 1 ]; then
+  ssh "$host" \
+  KMP_FORKJOIN_FRAMES=1 \
+  INTEL_LIBITTNOTIFY64=$__OCL_MIC_INTEL_LIBITTNOTIFY64 \
+  INTEL_ITTNOTIFY_CONFIG=$__OCL_MIC_INTEL_ITTNOTIFY_CONFIG \
+  USERAPICOLLECTOR_LOG_DIR=$__OCL_MIC_USERAPICOLLECTOR_LOG_DIR \
+  KMP_AFFINITY=$afinity \
+  "$PWD/$cmd" "$@"
+else
+  ssh "$host" \
+  KMP_AFFINITY=$afinity \
+  "$PWD/$cmd" "$@"
+fi
