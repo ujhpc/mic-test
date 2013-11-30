@@ -56,6 +56,7 @@ c++11 {
 }
 
 unix:*-icc|*-icc-* {
-  QMAKE_CXXFLAGS += -no-intel-extensions
-  QMAKE_LFLAGS   += -no-intel-extensions -static-intel
+  QMAKE_CXXFLAGS      += -no-intel-extensions
+  QMAKE_LFLAGS        += -no-intel-extensions
+  !*-mic:QMAKE_LFLAGS += -static-intel
 }
